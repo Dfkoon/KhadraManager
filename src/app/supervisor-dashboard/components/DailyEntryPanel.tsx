@@ -27,9 +27,9 @@ export default function DailyEntryPanel({ workers, products, entries, setEntries
 
   const calculateHourlyAmount = () => {
     if (!worker?.hourlyRate || !startTime || !endTime) return 0;
-    const startMins = parseInt(startTime.split(':')[0]) * 60 + parseInt(startTime.split(':')[1]);
-    const endMins = parseInt(endTime.split(':')[0]) * 60 + parseInt(endTime.split(':')[1]);
-    const diffHours = (endMins - startMins - breakMinutes) / 60;
+    const [startH, startM] = startTime.split(':').map(Number);
+    const [endH, endM] = endTime.split(':').map(Number);
+    const diffHours = (endH - startH) + (endM - startM) / 60 - (breakMinutes / 60);
     return Math.max(0, diffHours * worker.hourlyRate);
   };
 
@@ -67,12 +67,6 @@ export default function DailyEntryPanel({ workers, products, entries, setEntries
     };
 
     if (isHourly) {
-      const [startH, startM] = startTime.split(':').map(Number);
-      const [endH, endM] = endTime.split(':').map(Number);
-      if (endH * 60 + endM <= startH * 60 + startM + breakMinutes) {
-        toast.error("وقت الانتهاء يجب أن يكون بعد وقت البدء بمدة كافية تشمل الاستراحة");
-        return;
-      }
       payload.startTime = startTime;
       payload.endTime = endTime;
       payload.breakMinutes = breakMinutes;
@@ -96,8 +90,6 @@ export default function DailyEntryPanel({ workers, products, entries, setEntries
       
       if (res.ok) {
         const savedEntry = await res.json();
-        // Optimistically update or re-fetch (simplifying here by updating local state)
-        // If it was an increment, we'd need to handle that, but for now let's just toast and clear
         setEntries([savedEntry, ...entries.filter((e: any) => e.id !== savedEntry.id)]);
         toast.success(user?.role === 'CLERK' ? "تم إرسال الكمية للمراجعة" : "تم تسجيل الحصاد بنجاح");
         setBoxes("");
@@ -108,10 +100,7 @@ export default function DailyEntryPanel({ workers, products, entries, setEntries
     }
   };
 
-
-
   const handleScan = (data: string) => {
-    // Expected format: W-1234567 or similar
     const worker = workers.find((w: any) => w.qrCode === data || w.id === data);
     if (worker) {
       setSelectedWorker(worker.id);
