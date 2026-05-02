@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  username  String   @unique
+  password  String
+  role      String   // 'ADMIN', 'HEAD_SUPERVISOR', 'CLERK'
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  entries   DailyEntry[] 
+}
+
+model Worker {
+  id         String   @id @default(cuid())
+  name       String
+  phone      String?  // رقم الهاتف للواتساب
+  qrCode     String?  @unique
+  workerType String   @default("PIECE") // 'PIECE' (بكسة) or 'HOURLY' (ساعة)
+  hourlyRate Float?   // اجرة الساعة اذا كان HOURLY
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  entries    DailyEntry[]
+  attendance Attendance[]
+}
+
+model Attendance {
+  id        String   @id @default(cuid())
+  date      String   // YYYY-MM-DD
+  status    String   // 'PRESENT' or 'ABSENT'
+  
+  workerId  String
+  worker    Worker   @relation(fields: [workerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([workerId, date]) 
+}
+
+model Product {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  price     Float    // Price per box (in Qirsh)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  entries   DailyEntry[]
+}
+
+model DailyEntry {
+  id           String   @id @default(cuid())
+  boxes        Int      @default(0)
+  amount       Float    @default(0)
+  date         String   // YYYY-MM-DD
+  time         String   // HH:MM
+  status       String   @default("PENDING") // 'PENDING' or 'APPROVED'
+  isPaid       Boolean  @default(false)    // هل تم دفع الراتب؟
+  
+  // For Hourly Workers
+  startTime    String?  // HH:MM
+  endTime      String?  // HH:MM
+  breakMinutes Int?     @default(0)
+  
+  workerId     String
+  worker       Worker   @relation(fields: [workerId], references: [id], onDelete: Cascade)
+  
+  productId    String?  
+  product      Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  supervisorId String
+  supervisor   User     @relation(fields: [supervisorId], references: [id], onDelete: Cascade)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  category    String   // 'DIESEL', 'SEEDS', 'FERTILIZER', 'MAINTENANCE', 'OTHER'
+  amount      Float
+  date        String   // YYYY-MM-DD
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model InventoryItem {
+  id          String   @id @default(cuid())
+  name        String   @unique // 'بكسة بلاستيك', 'كرتونة كبيرة', الخ
+  quantity    Int      @default(0)
+  minQuantity Int      @default(10) // للتنبيه عند النقص
+  unit        String   @default("قطعة")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
