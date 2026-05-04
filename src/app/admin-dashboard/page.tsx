@@ -41,7 +41,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/sign-in-screen");
-    } else if (status === "authenticated" && session?.user?.role !== 'ADMIN') {
+    } else if (status === "authenticated" && (session?.user as any)?.role !== 'ADMIN') {
       router.push("/supervisor-dashboard");
     }
   }, [status, session, router]);
