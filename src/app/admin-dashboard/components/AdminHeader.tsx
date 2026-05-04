@@ -2,14 +2,14 @@
 
 import { Bell } from "lucide-react";
 
-export default function AdminHeader() {
+export default function AdminHeader({ user }: any) {
   const dateStr = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
   return (
     <header className="h-[65px] bg-white border-b border-border shadow-sm flex items-center justify-between px-6 z-10 sticky top-0">
       <div className="flex items-center gap-4">
         <div>
-          <h2 className="font-bold text-foreground">مرحباً، المدير الرئيسي</h2>
+          <h2 className="font-bold text-foreground">مرحباً، {user?.name || "المدير الرئيسي"}</h2>
           <p className="text-xs text-gray-500">{dateStr}</p>
         </div>
       </div>
