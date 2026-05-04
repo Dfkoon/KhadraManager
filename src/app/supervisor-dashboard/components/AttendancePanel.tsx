@@ -300,7 +300,7 @@ export default function AttendancePanel({ workers, attendance, setAttendance, en
             </div>
 
             <button 
-              onClick={batchEndHourly}
+              onClick={handleEndSelected}
               disabled={isProcessing || selectedForEnd.length === 0}
               className="w-full flex items-center justify-center gap-3 bg-red-600 text-white p-4 rounded-2xl font-bold shadow-lg hover:bg-red-700 transition-all"
             >
