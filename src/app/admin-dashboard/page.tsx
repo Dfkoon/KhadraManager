@@ -1,5 +1,22 @@
 "use client";
 
+export interface DailyEntry {
+  id: string;
+  date: string;
+  time: string;
+  supervisorId: string;
+  supervisorName: string;
+  workerId: string;
+  workerName: string;
+  productId: string;
+  productName: string;
+  boxes: number;
+  amount: number;
+  status: 'PENDING' | 'APPROVED';
+  startTime?: string;
+  endTime?: string;
+}
+
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
