@@ -18,7 +18,6 @@ export default function HarvestBarChart() {
       <BarChart
         data={data}
         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-        dir="ltr"
       >
         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
         <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} dy={10} />
