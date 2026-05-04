@@ -69,7 +69,7 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    if (status === "authenticated" && session?.user?.role === 'ADMIN') {
+    if (status === "authenticated" && (session?.user as any)?.role === 'ADMIN') {
       fetchData();
     }
   }, [status, session]);
@@ -83,7 +83,7 @@ export default function AdminDashboard() {
       <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
       
       <div className="flex-1 flex flex-col min-w-0">
-        <AdminHeader user={session?.user} />
+        <AdminHeader user={session?.user as any} />
         
         <main className="flex-1 p-6 xl:p-8 max-w-screen-2xl mx-auto w-full overflow-y-auto">
           {activeTab === "overview" && <AdminOverviewPanel supervisors={supervisors} entries={entries} />}

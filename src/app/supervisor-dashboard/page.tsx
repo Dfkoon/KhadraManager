@@ -72,16 +72,16 @@ export default function SupervisorDashboard() {
       }
     };
 
-    if (status === "authenticated") {
+    if (status === "authenticated" && ((session?.user as any)?.role === 'ADMIN')) {
       fetchData();
     }
-  }, [status]);
+  }, [status, session]);
 
   if (status === "loading" || isLoading) {
     return <div className="min-h-screen flex items-center justify-center bg-background">جاري التحميل...</div>;
   }
 
-  const userRole = session?.user?.role;
+  const userRole = (session?.user as any)?.role;
   const isHead = userRole === 'ADMIN' || userRole === 'HEAD_SUPERVISOR';
   
   const approvedEntries = entries.filter((e: any) => e.status === 'APPROVED');
@@ -116,7 +116,7 @@ export default function SupervisorDashboard() {
           setSessionClosed={setSessionClosed}
           entries={entries}
           setEntries={setEntries}
-          user={session?.user}
+          user={session?.user as any}
         />
         
         <div className="flex-1 overflow-y-auto p-4 md:p-8 pb-24 md:pb-8">
@@ -135,7 +135,7 @@ export default function SupervisorDashboard() {
                     entries={entries}
                     setEntries={setEntries}
                     sessionClosed={sessionClosed}
-                    user={session?.user}
+                    user={session?.user as any}
                   />
                   {isHead && pendingEntries.length > 0 && (
                     <div className="hidden lg:block">
@@ -158,7 +158,7 @@ export default function SupervisorDashboard() {
                     </div>
                   )}
                   <EntryLogs 
-                    entries={isHead ? entries : entries.filter((e: any) => e.supervisorId === session?.user?.id && !e.startTime)} 
+                    entries={isHead ? entries : entries.filter((e: any) => e.supervisorId === (session?.user as any)?.id && !e.startTime)} 
                     workers={workers}
                     products={products}
                   />
