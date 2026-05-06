@@ -17,7 +17,6 @@ import ProductsPanel from "./components/ProductsPanel";
 import ExpensesPanel from "./components/ExpensesPanel";
 import PayrollPanel from "./components/PayrollPanel";
 import ArchivePanel from "./components/ArchivePanel";
-import WorkerPricesPanel from "./components/WorkerPricesPanel";
 
 export default function SupervisorDashboard() {
   const { data: session, status } = useSession();

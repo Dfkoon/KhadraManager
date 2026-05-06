@@ -2,7 +2,6 @@
 
 import { Trash2, TrendingUp, Download, FileText, Table as TableIcon, Timer, Package, Smartphone, Printer } from "lucide-react";
 import { toast } from "sonner";
-import { DailyEntry } from "../page";
 
 export default function TodaySummaryPanel({ entries, setEntries, sessionClosed, isHead, workers, products }: any) {
   const visibleEntries = isHead ? entries : entries.filter((e: any) => !e.startTime);
@@ -34,7 +33,7 @@ export default function TodaySummaryPanel({ entries, setEntries, sessionClosed, 
       e.date + " " + e.time,
       e.isPaid ? "تم الدفع" : "لم يدفع"
     ]);
-    const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+    const csvContent = "\uFEFF" + [headers.join(","), ...rows.map((r: any) => r.join(","))].join("\n");
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");

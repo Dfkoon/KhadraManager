@@ -5,7 +5,7 @@ import { Archive, Plus, Trash2, AlertTriangle, Package, Minus } from "lucide-rea
 import { toast } from "sonner";
 
 export default function InventoryPanel() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [newItem, setNewItem] = useState({ name: "", quantity: "", minQuantity: "10", unit: "قطعة" });
 

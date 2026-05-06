@@ -5,7 +5,7 @@ import { Wallet, Plus, Trash2, Calendar, Tag, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ExpensesPanel() {
-  const [expenses, setExpenses] = useState([]);
+  const [expenses, setExpenses] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [category, setCategory] = useState("OTHER");
   const [amount, setAmount] = useState<number | "">("");
