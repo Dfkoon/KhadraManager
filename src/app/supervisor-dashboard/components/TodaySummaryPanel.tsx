@@ -50,24 +50,33 @@ export default function TodaySummaryPanel({ entries, setEntries, sessionClosed, 
 
     const date = new Date().toLocaleDateString('ar-JO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     
-    let pieceRows = pieceEntries.map((e: any) => `
-      <tr>
-        <td>${e.time}</td>
-        <td>${e.workerName}</td>
-        <td>${e.productName}</td>
-        <td style="text-align:center">${e.boxes}</td>
-        <td style="text-align:center">${e.amount}</td>
-      </tr>
-    `).join('');
+    let pieceRows = pieceEntries.map((e: any) => {
+      const workerName = e.workerName || workers.find((w: any) => w.id === e.workerId)?.name || "غير معروف";
+      const productName = e.productName || products.find((p: any) => p.id === e.productId)?.name || "ساعات عمل";
+      const amountInJD = (e.amount / 100).toFixed(2);
+      
+      return `
+        <tr>
+          <td>${e.time}</td>
+          <td>${workerName}</td>
+          <td>${productName}</td>
+          <td style="text-align:center">${e.boxes}</td>
+          <td style="text-align:center">${amountInJD} د.أ</td>
+        </tr>
+      `;
+    }).join('');
 
-    let hourlyRows = hourlyEntries.map((e: any) => `
-      <tr>
-        <td>${e.workerName}</td>
-        <td>${e.startTime} - ${e.endTime}</td>
-        <td style="text-align:center">${e.breakMinutes} د</td>
-        <td style="text-align:center">${e.amount.toFixed(2)}</td>
-      </tr>
-    `).join('');
+    let hourlyRows = hourlyEntries.map((e: any) => {
+      const workerName = e.workerName || workers.find((w: any) => w.id === e.workerId)?.name || "غير معروف";
+      return `
+        <tr>
+          <td>${workerName}</td>
+          <td>${e.startTime} - ${e.endTime}</td>
+          <td style="text-align:center">${e.breakMinutes} د</td>
+          <td style="text-align:center">${e.amount.toFixed(2)} د.أ</td>
+        </tr>
+      `;
+    }).join('');
 
     printWindow.document.write(`
       <html dir="rtl">
@@ -97,7 +106,7 @@ export default function TodaySummaryPanel({ entries, setEntries, sessionClosed, 
 
           <div class="stats">
             <div class="stat-card"><p>إجمالي البكسات</p><h2>${totalBoxes}</h2></div>
-            <div class="stat-card"><p>أجور البكسات</p><h2>${totalPieceAmount} قرش</h2></div>
+            <div class="stat-card"><p>أجور البكسات</p><h2>${(totalPieceAmount / 100).toFixed(2)} د.أ</h2></div>
             <div class="stat-card"><p>أجور الساعة</p><h2>${totalHourlyAmount.toFixed(2)} د.أ</h2></div>
           </div>
 
@@ -183,7 +192,7 @@ export default function TodaySummaryPanel({ entries, setEntries, sessionClosed, 
         </div>
         <div className="bg-white rounded-xl border border-border p-4 shadow-sm">
           <p className="text-gray-500 text-[10px] uppercase font-bold mb-1">أجور البكسات</p>
-          <p className="text-2xl font-bold text-orange-600">{totalPieceAmount} <span className="text-xs font-normal">قرش</span></p>
+          <p className="text-2xl font-bold text-orange-600">{(totalPieceAmount / 100).toFixed(2)} <span className="text-xs font-normal">دينار</span></p>
         </div>
         <div className="bg-white rounded-xl border border-border p-4 shadow-sm col-span-2 lg:col-span-1">
           <p className="text-gray-500 text-[10px] uppercase font-bold mb-1">أجور عمال الساعة</p>
@@ -235,7 +244,7 @@ export default function TodaySummaryPanel({ entries, setEntries, sessionClosed, 
                     </span>
                   </td>
                   <td className="px-4 py-3 text-center font-bold text-primary">{entry.boxes}</td>
-                  <td className="px-4 py-3 text-center font-bold text-orange-600">{entry.amount}</td>
+                  <td className="px-4 py-3 text-center font-bold text-orange-600">{(entry.amount / 100).toFixed(2)} د.أ</td>
                   <td className="px-4 py-3 text-center">
                     <button onClick={() => handleDelete(entry.id)} disabled={sessionClosed} className="p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded"><Trash2 size={14}/></button>
                   </td>
