@@ -23,21 +23,19 @@ async function main() {
   // 2. Head Supervisor (Maysoun)
   await prisma.user.upsert({
     where: { username: 'maysoun.head' },
-    update: {},
+    update: { name: 'المسؤولة — ميسون أم آدم' },
     create: {
-      name: 'ميسون أم آدم',
+      name: 'المسؤولة — ميسون أم آدم',
       username: 'maysoun.head',
       password: headSupervisorPassword,
       role: 'HEAD_SUPERVISOR',
     },
   })
 
-  // 3. Clerks (Zaid, Qusai, Abd, Mohamad)
+  // 3. Clerks (Abd, Mohamad)
   const clerks = [
-    { name: 'زيد أبو كريم', username: 'zaid.clerk' },
-    { name: 'عبد الوالي', username: 'abd.clerk' },
-    { name: 'قصي', username: 'qusai.clerk' },
-    { name: 'محمد حسين', username: 'mohammad.clerk' },
+    { name: 'مدخل أعداد — عبد الوالي', username: 'abd.clerk' },
+    { name: 'مدخل أعداد — محمد حسين', username: 'mohammad.clerk' },
   ]
 
   for (const clerk of clerks) {

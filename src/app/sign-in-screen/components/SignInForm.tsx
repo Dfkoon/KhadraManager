@@ -37,8 +37,9 @@ export default function SignInForm() {
 
   const demoAccounts = [
     { role: 'المدير الرئيسي', username: 'admin', password: 'khadra2026' },
-    { role: 'المسؤولة — ميسون', username: 'maysoun.head', password: 'maysoun2026' },
-    { role: 'مدخل أعداد — زيد', username: 'zaid.clerk', password: 'clerk2026' },
+    { role: 'المسؤولة — ميسون أم آدم', username: 'maysoun.head', password: 'maysoun2026' },
+    { role: 'مدخل أعداد — عبد الوالي', username: 'abd.clerk', password: 'clerk2026' },
+    { role: 'مدخل أعداد — محمد حسين', username: 'mohammad.clerk', password: 'clerk2026' },
   ];
 
   const fillDemoAccount = (acc: any) => {

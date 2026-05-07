@@ -39,14 +39,11 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Temporary Bypass: Allow access without login
-    /*
     if (status === "unauthenticated") {
       router.push("/sign-in-screen");
     } else if (status === "authenticated" && (session?.user as any)?.role !== 'ADMIN') {
       router.push("/supervisor-dashboard");
     }
-    */
   }, [status, session, router]);
 
   const fetchData = async () => {
@@ -72,11 +69,13 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (status === "authenticated" && (session?.user as any)?.role === 'ADMIN') {
+      fetchData();
+    }
+  }, [status, session]);
 
-  if (isLoading) {
-    return <div className="min-h-screen flex items-center justify-center bg-background">جاري تحميل لوحة الإدارة (بدون حماية)...</div>;
+  if (status === "loading" || isLoading) {
+    return <div className="min-h-screen flex items-center justify-center bg-background">جاري تحميل لوحة الإدارة...</div>;
   }
 
   return (
