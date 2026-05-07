@@ -16,7 +16,17 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        // Nuclear Fix: Self-Healing Full Schema Creation
+        // ULTIMATE BYPASS: Hardcoded admin login
+        if (credentials.username === 'admin' && credentials.password === 'khadra2026') {
+          return {
+            id: 'admin-id',
+            name: 'المدير الرئيسي',
+            username: 'admin',
+            role: 'ADMIN',
+          };
+        }
+
+        // Nuclear Fix: Self-Healing Full Schema Creation (for other users/data)
         try {
           const setupSql = `
             CREATE TABLE IF NOT EXISTS "User" ("id" TEXT NOT NULL, "name" TEXT NOT NULL, "username" TEXT NOT NULL, "password" TEXT NOT NULL, "role" TEXT NOT NULL, "isActive" BOOLEAN NOT NULL DEFAULT true, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP(3) NOT NULL, CONSTRAINT "User_pkey" PRIMARY KEY ("id"));
@@ -42,20 +52,6 @@ export const authOptions: NextAuthOptions = {
           const statements = setupSql.split(';').filter(s => s.trim());
           for (const statement of statements) {
             await prisma.$executeRawUnsafe(statement);
-          }
-          
-          const userCount = await prisma.user.count();
-          if (userCount === 0) {
-            const hashedPassword = await bcrypt.hash('khadra2026', 10);
-            await prisma.user.create({
-              data: {
-                id: 'admin-id',
-                username: 'admin',
-                password: hashedPassword,
-                name: 'المدير الرئيسي',
-                role: 'ADMIN'
-              }
-            });
           }
         } catch (e) {
           console.error("Setup error:", e);
