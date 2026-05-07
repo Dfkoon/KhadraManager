@@ -16,9 +16,25 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const user = await prisma.user.findUnique({
+        let user = await prisma.user.findUnique({
           where: { username: credentials.username }
         });
+
+        // Auto-seed: If database is empty and user is trying to login as admin
+        if (!user && credentials.username === 'admin') {
+          const userCount = await prisma.user.count();
+          if (userCount === 0) {
+            const hashedPassword = await bcrypt.hash('khadra2026', 10);
+            user = await prisma.user.create({
+              data: {
+                username: 'admin',
+                password: hashedPassword,
+                name: 'المدير الرئيسي',
+                role: 'ADMIN'
+              }
+            });
+          }
+        }
 
         if (!user) {
           return null;
