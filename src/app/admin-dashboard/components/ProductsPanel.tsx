@@ -21,14 +21,18 @@ export default function ProductsPanel({ products, setProducts }: any) {
         body: JSON.stringify({ name: data.name, price: Number(data.price) })
       });
       
+      const result = await res.json();
+
       if (res.ok) {
-        const newProduct = await res.json();
-        setProducts([...products, newProduct]);
+        setProducts([...products, result]);
         toast.success("تم إضافة المنتج بنجاح");
         reset();
+      } else {
+        toast.error(result.error || "فشل في إضافة المنتج");
       }
     } catch (error) {
-      toast.error("فشل في إضافة المنتج");
+      console.error("Add product error:", error);
+      toast.error("خطأ في الاتصال بالسيرفر");
     } finally {
       setIsLoading(false);
     }
