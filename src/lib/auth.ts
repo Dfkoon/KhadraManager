@@ -53,6 +53,20 @@ export const authOptions: NextAuthOptions = {
           for (const statement of statements) {
             await prisma.$executeRawUnsafe(statement);
           }
+
+          // GUARANTEE ADMIN EXISTS IN DB
+          const hashedPassword = await bcrypt.hash('khadra2026', 10);
+          await prisma.user.upsert({
+            where: { username: 'admin' },
+            update: {},
+            create: {
+              id: 'admin-id',
+              username: 'admin',
+              password: hashedPassword,
+              name: 'المدير الرئيسي',
+              role: 'ADMIN'
+            }
+          });
         } catch (e) {
           console.error("Setup error:", e);
         }
