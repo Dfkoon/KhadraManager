@@ -16,17 +16,29 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        let user = await prisma.user.findUnique({
-          where: { username: credentials.username }
-        });
-
-        // Auto-seed: If database is empty and user is trying to login as admin
-        if (!user && credentials.username === 'admin') {
+        // Radical Fix: Ensure table and admin exist via Raw SQL
+        try {
+          await prisma.$executeRawUnsafe(`
+            CREATE TABLE IF NOT EXISTS "User" (
+              "id" TEXT NOT NULL,
+              "name" TEXT NOT NULL,
+              "username" TEXT NOT NULL,
+              "password" TEXT NOT NULL,
+              "role" TEXT NOT NULL,
+              "isActive" BOOLEAN NOT NULL DEFAULT true,
+              "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+              "updatedAt" TIMESTAMP(3) NOT NULL,
+              CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+            );
+          `);
+          await prisma.$executeRawUnsafe(`CREATE UNIQUE INDEX IF NOT EXISTS "User_username_key" ON "User"("username");`);
+          
           const userCount = await prisma.user.count();
           if (userCount === 0) {
             const hashedPassword = await bcrypt.hash('khadra2026', 10);
-            user = await prisma.user.create({
+            await prisma.user.create({
               data: {
+                id: 'admin-id',
                 username: 'admin',
                 password: hashedPassword,
                 name: 'المدير الرئيسي',
@@ -34,7 +46,13 @@ export const authOptions: NextAuthOptions = {
               }
             });
           }
+        } catch (e) {
+          console.error("Setup error:", e);
         }
+
+        let user = await prisma.user.findUnique({
+          where: { username: credentials.username }
+        });
 
         if (!user) {
           return null;
