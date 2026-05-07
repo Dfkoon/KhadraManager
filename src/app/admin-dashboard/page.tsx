@@ -39,17 +39,20 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Temporary Bypass: Allow access without login
+    /*
     if (status === "unauthenticated") {
       router.push("/sign-in-screen");
     } else if (status === "authenticated" && (session?.user as any)?.role !== 'ADMIN') {
       router.push("/supervisor-dashboard");
     }
+    */
   }, [status, session, router]);
 
   const fetchData = async () => {
     try {
       const [uRes, pRes, eRes] = await Promise.all([
-        fetch('/api/users'), // Need to make sure this exists
+        fetch('/api/users'), 
         fetch('/api/products'),
         fetch('/api/entries')
       ]);
@@ -69,13 +72,11 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    if (status === "authenticated" && (session?.user as any)?.role === 'ADMIN') {
-      fetchData();
-    }
-  }, [status, session]);
+    fetchData();
+  }, []);
 
-  if (status === "loading" || isLoading) {
-    return <div className="min-h-screen flex items-center justify-center bg-background">جاري تحميل لوحة الإدارة...</div>;
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center bg-background">جاري تحميل لوحة الإدارة (بدون حماية)...</div>;
   }
 
   return (
