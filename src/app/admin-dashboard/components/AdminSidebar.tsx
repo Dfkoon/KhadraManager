@@ -58,6 +58,13 @@ export default function AdminSidebar({ activeTab, setActiveTab, isOpen, setIsOpe
           {isOpen && <span className="font-medium whitespace-nowrap">تسجيل الخروج</span>}
         </button>
       </div>
+      {/* Version Indicator */}
+      <div className="absolute bottom-4 right-4 left-4">
+        <div className="text-[10px] text-gray-500 font-mono bg-black/5 rounded px-2 py-1 flex items-center justify-between">
+          <span>الإصدار</span>
+          <span>v1.1.0</span>
+        </div>
+      </div>
     </div>
   );
 }

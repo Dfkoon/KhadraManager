@@ -18,6 +18,8 @@ import ExpensesPanel from "./components/ExpensesPanel";
 import PayrollPanel from "./components/PayrollPanel";
 import ArchivePanel from "./components/ArchivePanel";
 
+const APP_VERSION = "1.1.0 (Persistence Fix)";
+
 export default function SupervisorDashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();

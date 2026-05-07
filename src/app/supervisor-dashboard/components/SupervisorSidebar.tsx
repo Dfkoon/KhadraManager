@@ -90,6 +90,13 @@ export default function SupervisorSidebar({ activeTab, setActiveTab, isOpen, set
           </button>
         ))}
       </div>
+      {/* Version Indicator */}
+      <div className="mt-auto px-4 pb-4">
+        <div className="text-[10px] text-gray-400 font-mono bg-white/5 rounded px-2 py-1 flex items-center justify-between">
+          <span>الإصدار</span>
+          <span>v1.1.0</span>
+        </div>
+      </div>
     </>
   );
 }
